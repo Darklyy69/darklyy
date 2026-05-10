@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>自己紹介ページ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;700&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #e8002d;
+      --red-dim: #8a001a;
+      --carbon: #111113;
+      --carbon-2: #18181c;
+      --carbon-3: #222228;
+      --steel: #2e2e36;
+      --chrome: #a0a8b8;
+      --chrome-bright: #d8dde8;
+      --text: #c8ccd8;
+      --text-dim: #60636e;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: url('background bmw.jpg') center/cover no-repeat fixed;
+      color: var(--text);
+      font-family: 'Noto Sans JP', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* dark overlay so text stays readable */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: 0; left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--red), var(--red-dim) 60%, transparent);
+      z-index: 10;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 48px 120px;
+    }
+
+    .top-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: fadeIn 0.6s ease 0.1s forwards;
+    }
+    .top-badge::before {
+      content: '';
+      display: block;
+      width: 28px; height: 1px;
+      background: var(--red);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 40px;
+      align-items: center;
+      margin-bottom: 64px;
+      opacity: 0;
+      transform: translateX(-20px);
+      animation: slideRight 0.8s ease 0.2s forwards;
+    }
+
+    .avatar-wrap { position: relative; }
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 4px;
+      background: var(--carbon-3);
+      border: 1px solid var(--steel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      color: var(--chrome-bright);
+      letter-spacing: 0.05em;
+      position: relative;
+      overflow: hidden;
+      object-fit: cover;
+    }
+    .avatar::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--red);
+    }
+
+    .avatar-wrap::before,
+    .avatar-wrap::after {
+      content: '';
+      position: absolute;
+      width: 10px; height: 10px;
+      border-color: var(--red);
+      border-style: solid;
+    }
+    .avatar-wrap::before { top: -3px; right: -3px; border-width: 2px 2px 0 0; }
+    .avatar-wrap::after  { bottom: -3px; left: -3px; border-width: 0 0 2px 2px; }
+
+    .name-tag {
+      font-size: 10px;
+      letter-spacing: 0.45em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-family: 'Rajdhani', sans-serif;
+      margin-bottom: 6px;
+    }
+    .name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 58px;
+      letter-spacing: 0.08em;
+      color: var(--chrome-bright);
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+    .name span { color: var(--red); }
+    .tagline {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid var(--steel);
+      border-radius: 4px;
+      margin-bottom: 64px;
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeIn 0.8s ease 0.45s forwards;
+    }
+    .stat {
+      padding: 20px 16px;
+      text-align: center;
+      border-right: 1px solid var(--steel);
+      background: rgba(24,24,28,0.85);
+      transition: background 0.3s;
+    }
+    .stat:last-child { border-right: none; }
+    .stat:hover { background: rgba(34,34,40,0.95); }
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      color: var(--red);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .stat-label {
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-family: 'Rajdhani', sans-serif;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .section {
+      background: rgba(24,24,28,0.88);
+      border: 1px solid var(--steel);
+      border-radius: 4px;
+      padding: 24px 28px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+    }
+    .section::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--red);
+    }
+    .section.wide { grid-column: 1 / -1; }
+
+    .section:nth-child(1) { animation: fadeIn 0.7s ease 0.55s forwards; }
+    .section:nth-child(2) { animation: fadeIn 0.7s ease 0.65s forwards; }
+    .section.wide         { animation: fadeIn 0.7s ease 0.75s forwards; }
+
+    .section-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      color: var(--red);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--steel);
+    }
+
+    .section-body {
+      font-size: 14px;
+      line-height: 2;
+      color: var(--text);
+      font-weight: 300;
+    }
+
+    .garage { display: flex; flex-direction: column; gap: 10px; }
+    .garage-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(34,34,40,0.9);
+      border-radius: 3px;
+      border: 1px solid var(--steel);
+      transition: border-color 0.25s, transform 0.25s;
+      cursor: default;
+    }
+    .garage-item:hover { border-color: var(--red); transform: translateX(4px); }
+    .car-icon { font-size: 18px; width: 28px; text-align: center; }
+    .car-info { flex: 1; }
+    .car-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--chrome-bright);
+      letter-spacing: 0.08em;
+    }
+    .car-detail { font-size: 11px; color: var(--text-dim); letter-spacing: 0.1em; }
+    .car-badge {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      padding: 3px 10px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .badge-own   { background: #1a2e18; color: #4caf50; border: 1px solid #2e5a2a; }
+    .badge-dream { background: #2e1218; color: var(--red); border: 1px solid var(--red-dim); }
+    .badge-prev  { background: #1a1e2e; color: #6a8adf; border: 1px solid #2a3a6a; }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      padding: 5px 14px;
+      border-radius: 2px;
+      border: 1px solid var(--steel);
+      color: var(--chrome);
+      background: rgba(34,34,40,0.9);
+      text-transform: uppercase;
+      transition: border-color 0.25s, color 0.25s;
+      cursor: default;
+    }
+    .tag:hover { border-color: var(--red); color: var(--chrome-bright); }
+
+    .spec-table { width: 100%; border-collapse: collapse; }
+    .spec-table tr { border-bottom: 1px solid var(--steel); }
+    .spec-table tr:last-child { border-bottom: none; }
+    .spec-table td { padding: 9px 4px; font-size: 13px; }
+    .spec-key {
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.25em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      font-size: 11px;
+      width: 40%;
+    }
+    .spec-val { color: var(--chrome-bright); font-weight: 400; }
+
+    .contact-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .contact-btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border: 1px solid var(--steel);
+      border-radius: 3px;
+      color: var(--chrome);
+      text-decoration: none;
+      background: transparent;
+      transition: background 0.25s, border-color 0.25s, color 0.25s;
+    }
+    .contact-btn:hover { background: var(--red); border-color: var(--red); color: #fff; }
+    .contact-btn.primary { background: var(--red); border-color: var(--red); color: #fff; }
+    .contact-btn.primary:hover { background: #c00026; }
+
+    .footer {
+      margin-top: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      opacity: 0;
+      animation: fadeIn 0.8s ease 1s forwards;
+    }
+    .footer-line { flex: 1; height: 1px; background: var(--steel); }
+    .footer-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      padding: 0 16px;
+    }
+
+    @keyframes fadeIn    { to { opacity: 1; } }
+    @keyframes slideRight { to { opacity: 1; transform: translateX(0); } }
+
+    @media (max-width: 620px) {
+      .page { padding: 48px 24px 80px 32px; }
+      .hero { grid-template-columns: 1fr; }
+      .avatar { width: 90px; height: 90px; font-size: 38px; }
+      .name { font-size: 44px; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .stat:nth-child(2) { border-right: none; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="page">
+
+    <p class="top-badge">Profile &amp; 自己紹介</p>
+
+    <div class="hero">
+      <div class="avatar-wrap">
+        <img class="avatar" src="Darkly.png" alt="pfp">
+      </div>
+      <div class="hero-text">
+        <p class="name-tag">自己紹介 / About Me</p>
+        <h1 class="name">Darklyyy <span>69</span></h1>
+        <p class="tagline">Full Time Gran Turismo Gamer · Professional Gooner · Nicotine Addict</p>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">12</div>
+        <div class="stat-label">Cars In The Wishlist</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">2K</div>
+        <div class="stat-label">Track KM</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Cars Driven</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1</div>
+        <div class="stat-label">Month Active</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="section">
+        <h2 class="section-label">About</h2>
+        <p class="section-body">
+          Yo nigga it's Darkly.<br>
+          International student in 横浜医療秘書＆IT専門学校.<br><br>
+          I always wanted to be racer but i became racist.<br>
+          Always goes over the speed limit back in my country.<br>
+          I've been driven drunk ・<br>
+          I want Koeniggsegg Jesko Absolute in my garage。
+        </p>
+      </div>
+      <div class="section">
+        <h2 class="section-label">Spec Sheet</h2>
+        <table class="spec-table">
+          <tr><td class="spec-key">Country</td><td class="spec-val">Mongolia</td></tr>
+          <tr><td class="spec-key">Major</td><td class="spec-val">Racist/ProRageQuitting/ProUnemployed</td></tr>
+          <tr><td class="spec-key">Favourite manifacturer</td><td class="spec-val">Koeniggsegg / Ferrari / Bmw</td></tr>
+          <tr><td class="spec-key">Dream roads</td><td class="spec-val">Autobahn / Nürburgring nordschleife</td></tr>
+          <tr><td class="spec-key">Road to </td><td class="spec-val">10k SIM Racing setup </td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="section wide">
+        <h2 class="section-label">My Garage</h2>
+        <div class="garage">
+          <div class="garage-item">
+            <span class="car-icon">🏎</span>
+            <div class="car-info">
+              <div class="car-name">Toyota Harrier</div>
+              <div class="car-detail">2015 · Inline 2000cc · Full Black &amp; Purple</div>
+            </div>
+            <span class="car-badge badge-own">Driven</span>
+          </div>
+          <div class="garage-item">
+            <span class="car-icon">🚗</span>
+            <div class="car-info">
+              <div class="car-name">Lexus NX350</div>
+              <div class="car-detail">2018 · Traffic Build</div>
+            </div>
+            <span class="car-badge badge-own">Driven</span>
+          </div>
+          <div class="garage-item">
+            <span class="car-icon">🚙</span>
+            <div class="car-info">
+              <div class="car-name">Toyota Ch-r</div>
+              <div class="car-detail">2019 · Stock</div>
+            </div>
+            <span class="car-badge badge-prev">Most liked shitbox</span>
+          </div>
+          <div class="garage-item">
+            <span class="car-icon">✦</span>
+            <div class="car-info">
+              <div class="car-name">Koenigsegg Jesko Absolute</div>
+              <div class="car-detail">The dream. Someday. 🙏</div>
+            </div>
+            <span class="car-badge badge-dream">Dream</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="section">
+        <h2 class="section-label">Stock but sounds like tuned ones</h2>
+        <div class="tags">
+          <span class="tag">Always 100% Volume</span>
+          <span class="tag">Suspension: Broken</span>
+          <span class="tag">Aero Kits: Fucked Up</span>
+          <span class="tag">ECO Boost</span>
+          <span class="tag">Brake Setup: Failed</span>
+          <span class="tag">Welding Like Whale</span>
+          <span class="tag">Drift Only In Snow</span>
+          <span class="tag">Time Attack: 2-3hrs</span>
+          <span class="tag">Restore: No</span>
+        </div>
+      </div>
+      <div class="section">
+        <h2 class="section-label">Contact</h2>
+        <p class="section-body" style="margin-bottom: 18px; font-size:13px;">
+          Social Type Shits。<br>
+        </p>
+        <div class="contact-row">
+          <a href="mailto:Darklyyy@gmail.com" class="contact-btn primary">Email</a>
+          <a href="https://www.instagram.com/darkly________" target="_blank" class="contact-btn">Instagram</a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <div class="footer-line"></div>
+      <p class="footer-text">Built for goon · Built for fuck everything up</p>
+      <div class="footer-line"></div>
+    </footer>
+
+  </main>
+
+</body>
+</html>
